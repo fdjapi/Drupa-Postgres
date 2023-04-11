@@ -12,6 +12,13 @@ spec:
       labels:
         app: postgres
     spec:
+      initContainers:
+      - name: remove-lost-found
+        image: busybox
+        command: ["rm", "-rf", "/var/lib/postgresql/data/pgdata/lost+found"]
+        volumeMounts:
+        - name: postgres-data
+          mountPath: /var/lib/postgresql/data/pgdata
       containers:
       - name: postgres
         image: postgres:11.5
@@ -31,4 +38,4 @@ spec:
       volumes:
       - name: postgres-data
         persistentVolumeClaim:
-          claimName: postgres-pvc
+          claimName: postgres-pvc-new
